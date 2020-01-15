@@ -5,6 +5,5 @@ export default class Student {
     this.lastname = lastname;
     this.gender = gender;
     this.id_house = id_house;
-    /* this = { ...this, id, firstname, lastname, gender, id_house }; */
   }
 }

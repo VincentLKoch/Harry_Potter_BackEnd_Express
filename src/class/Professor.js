@@ -4,6 +4,5 @@ export default class Professor {
     this.firstname = firstname;
     this.lastname = lastname;
     this.gender = gender;
-    /* this = { ...this, id, firstname, lastname, gender }; */
   }
 }

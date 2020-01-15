@@ -1,4 +1,4 @@
-import Dal from "./dal";
+import Dal from "./Dal";
 //import class:
 import Points from "./class/Points";
 import Student from "./class/Student";
