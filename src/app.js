@@ -20,7 +20,7 @@ app.use(function(_req, res, next) {
 app.get("/addProfessor/:firstName&:lastName&:genre", async (req, res) => {
   console.log("in ADD PROFESSOR, params: ", req.params);
   try {
-    const { firstName, lastName, genre, idHouse } = req.params;
+    const { firstName, lastName, genre } = req.params;
 
     if (!["M", "F"].includes(genre)) {
       //if genre isn't M or F
@@ -53,7 +53,7 @@ app.delete("/removeProfessor/:id", async (req, res) => {
         break;
 
       default:
-        console.log(error);
+        console.log(error); //only log unknows error
         res.status(400).end();
         break;
     }
