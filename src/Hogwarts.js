@@ -4,71 +4,66 @@ import Points from "./class/Points";
 import Student from "./class/Student";
 import Professor from "./class/Professor";
 
-export default class Hogwarts {
-  //TODO Class => arrow function
-  constructor() {
-    this.dal = new Dal();
-  }
-
-  async addProfessor(firstName, lastName, genre) {
+export default {
+  addProfessor: async (firstName, lastName, genre) => {
     try {
-      return await this.dal.addProfessor(
+      return await Dal.addProfessor(
         new Professor(null, firstName, lastName, genre)
       );
     } catch (err) {
       throw err;
     }
-  }
+  },
 
-  async removeProfessor(id) {
+  removeProfessor: async id => {
     try {
-      return await this.dal.removeProfessor(id);
+      return await Dal.removeProfessor(id);
     } catch (err) {
       throw err;
     }
-  }
+  },
 
-  async addStudent(firstName, lastName, genre, idHouse) {
+  addStudent: async (firstName, lastName, genre, idHouse) => {
     try {
-      return await this.dal.addStudent(
+      return await Dal.addStudent(
         new Student(null, firstName, lastName, genre, idHouse)
       );
     } catch (err) {
       throw err;
     }
-  }
+  },
 
-  async removeStudent(id) {
+  removeStudent: async id => {
     try {
-      return await this.dal.removeStudent(id);
+      return await Dal.removeStudent(id);
     } catch (err) {
       throw err;
     }
-  }
+  },
 
-  async addPoints(nb_points, id_professor, id_house) {
+  addPoints: async (nb_points, id_professor, id_house) => {
     try {
-      return await this.dal.addPoints(
+      return await Dal.addPoints(
         new Points(null, nb_points, id_professor, id_house)
       );
     } catch (err) {
       throw err;
     }
-  }
+  },
 
-  async endOfTheYear() {
+  endOfTheYear: async () => {
     try {
-      return await this.dal.endOfTheYear();
+      return await Dal.endOfTheYear();
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  getHouseNameAndId: async () => {
+    try {
+      return await Dal.getHouseNameAndId();
     } catch (err) {
       throw err;
     }
   }
-
-  async getHouseNameAndId() {
-    try {
-      return await this.dal.getHouseNameAndId();
-    } catch (err) {
-      throw err;
-    }
-  }
-}
+};

@@ -3,8 +3,8 @@ import bodyParser from "body-parser";
 import Hogwarts from "./Hogwarts";
 
 const app = express();
-const hogwarts = new Hogwarts();
 
+// Setup :
 app.use(bodyParser.json());
 app.use(function(_req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -27,7 +27,7 @@ app.get("/addProfessor/:firstName&:lastName&:genre", async (req, res) => {
       throw "bad params";
     }
 
-    const result = await hogwarts.addProfessor(firstName, lastName, genre);
+    const result = await Hogwarts.addProfessor(firstName, lastName, genre);
     res
       .status(200)
       .set({ "Content-Type": "application/json" })
@@ -44,7 +44,7 @@ app.delete("/removeProfessor/:id", async (req, res) => {
   console.log("in REMOVE PROFESSOR, params: ", req.params);
   try {
     const { id } = req.params;
-    await hogwarts.removeProfessor(id);
+    await Hogwarts.removeProfessor(id);
     res.status(204).end();
   } catch (error) {
     switch (error) {
@@ -82,7 +82,7 @@ app.get(
           ? parseInt(idHouse, 10)
           : Math.floor(Math.random() * 4) + 1;
 
-      const result = await hogwarts.addStudent(
+      const result = await Hogwarts.addStudent(
         firstName,
         lastName,
         genre,
@@ -106,7 +106,7 @@ app.delete("/removeStudent/:id", async (req, res) => {
   console.log("in REMOVE STUDENT, params: ", req.params);
   try {
     const { id } = req.params;
-    await hogwarts.removeStudent(id);
+    await Hogwarts.removeStudent(id);
     res.status(204).end();
   } catch (error) {
     switch (error) {
@@ -127,7 +127,7 @@ app.post("/addPoints/:nb_points&:id_professor&:id_house", async (req, res) => {
   console.log("in REMOVE STUDENT, params: ", req.params);
   try {
     const { nb_points, id_professor, id_house } = req.params;
-    const result = await hogwarts.addPoints(nb_points, id_professor, id_house);
+    const result = await Hogwarts.addPoints(nb_points, id_professor, id_house);
 
     res
       .status(200)
@@ -144,7 +144,7 @@ app.post("/addPoints/:nb_points&:id_professor&:id_house", async (req, res) => {
 app.get("/endOfTheYear", async (req, res) => {
   console.log("in END OF THE YEAR");
   try {
-    const result = await hogwarts.endOfTheYear();
+    const result = await Hogwarts.endOfTheYear();
 
     if (result.length === 0) {
       throw "No Points";
@@ -173,7 +173,7 @@ app.get("/endOfTheYear", async (req, res) => {
 app.get("/getHouseNameAndId", async (req, res) => {
   console.log("in GET HOUSE NAME & ID");
   try {
-    const result = await hogwarts.getHouseNameAndId();
+    const result = await Hogwarts.getHouseNameAndId();
     res
       .status(200)
       .set({ "Content-Type": "application/json" })

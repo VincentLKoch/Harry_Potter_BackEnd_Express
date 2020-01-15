@@ -12,44 +12,49 @@ import pointsSchema from "./entity/pointsSchema";
 import professorSchema from "./entity/professorSchema";
 import studentSchema from "./entity/studentSchema";
 
-export default class Dal {
-  //TODO Class => arrow function
-  async connect() {
-    try {
-      return await createConnection({
-        type: "mysql",
-        host: "0.0.0.0",
-        port: 3306,
-        username: "root",
-        password: "root",
-        database: "db_harrypotter",
-        entities: [houseSchema, pointsSchema, professorSchema, studentSchema]
-      });
-    } catch (err) {
-      console.error("Unable to connect");
-      throw err;
-    }
+const connect = async () => {
+  try {
+    return await createConnection({
+      type: "mysql",
+      host: "0.0.0.0",
+      port: 3306,
+      username: "root",
+      password: "root",
+      database: "db_harrypotter",
+      entities: [houseSchema, pointsSchema, professorSchema, studentSchema]
+    });
+  } catch (err) {
+    console.error("Unable to connect");
+    throw err;
   }
+};
 
-  async addProfessor(newProfessor) {
+export default {
+  addProfessor: async newProfessor => {
     let connection;
     try {
-      connection = await this.connect();
+      connection = await connect();
       return await connection.getRepository(Professor).save(newProfessor);
     } catch (err) {
       throw err;
     } finally {
       await connection.close();
     }
-  }
+  },
 
-  async removeProfessor(id) {
+  removeProfessor: async id => {
     let connection;
     try {
-      connection = await this.connect();
-      const result = await connection.getRepository(Professor).remove({ id });
+      connection = await connect();
 
-      if (result.affected === 0 || !result.affected) {
+      const { affected } = await connection
+        .createQueryBuilder()
+        .delete()
+        .from(Professor)
+        .where("id = :id", { id })
+        .execute();
+
+      if (affected === 0 || !affected) {
         throw "Not found";
       }
       return;
@@ -58,27 +63,32 @@ export default class Dal {
     } finally {
       await connection.close();
     }
-  }
+  },
 
-  async addStudent(newStudent) {
+  addStudent: async newStudent => {
     let connection;
     try {
-      connection = await this.connect();
+      connection = await connect();
       return await connection.getRepository(Student).save(newStudent);
     } catch (err) {
       throw err;
     } finally {
       await connection.close();
     }
-  }
+  },
 
-  async removeStudent(id) {
+  removeStudent: async id => {
     let connection;
     try {
-      connection = await this.connect();
-      const result = await connection.getRepository(Student).remove({ id });
+      connection = await connect();
+      const { affected } = await connection
+        .createQueryBuilder()
+        .delete()
+        .from(Student)
+        .where("id = :id", { id })
+        .execute();
 
-      if (result.affected === 0 || !result.affected) {
+      if (affected === 0 || !affected) {
         throw "Not found";
       }
       return;
@@ -87,12 +97,12 @@ export default class Dal {
     } finally {
       await connection.close();
     }
-  }
+  },
 
-  async addPoints(newPoints) {
+  addPoints: async newPoints => {
     let connection;
     try {
-      connection = await this.connect();
+      connection = await connect();
       await connection.getRepository(Points).save(newPoints);
 
       //Get new sum of points for this house :
@@ -109,12 +119,12 @@ export default class Dal {
     } finally {
       await connection.close();
     }
-  }
+  },
 
-  async endOfTheYear() {
+  endOfTheYear: async () => {
     let connection;
     try {
-      connection = await this.connect();
+      connection = await connect();
 
       const result = await connection
         .getRepository(Points)
@@ -133,13 +143,13 @@ export default class Dal {
     } finally {
       await connection.close();
     }
-  }
+  },
 
   //For store init in front
-  async getHouseNameAndId() {
+  getHouseNameAndId: async () => {
     let connection;
     try {
-      connection = await this.connect();
+      connection = await connect();
 
       return await connection
         .getRepository(House)
@@ -151,4 +161,4 @@ export default class Dal {
       await connection.close();
     }
   }
-}
+};
