@@ -1,6 +1,6 @@
 {
   "name": "harry-potter_backend",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "test": "jest --watchAll"
   },
   "keywords": [],
-  "author": "",
+  "author": "Vincent Koch",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
