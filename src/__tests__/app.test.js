@@ -50,7 +50,7 @@ describe("app tests", () => {
 
       test("test Error response", async () => {
         Hogwarts.addProfessor = jest.fn().mockImplementation(() => {
-          throw "";
+          throw new Error("");
         });
         try {
           await request(app)
@@ -79,7 +79,7 @@ describe("app tests", () => {
 
       test("Professor dont exist", async () => {
         Hogwarts.removeProfessor = jest.fn().mockImplementation(() => {
-          throw "Not found";
+          throw new Error("Not found");
         });
         try {
           await request(app)
@@ -94,7 +94,7 @@ describe("app tests", () => {
 
       test("test Error response", async () => {
         Hogwarts.removeProfessor = jest.fn().mockImplementation(() => {
-          throw "";
+          throw new Error("");
         });
         try {
           await request(app)
@@ -177,7 +177,7 @@ describe("app tests", () => {
 
       test("Student dont exist", async () => {
         Hogwarts.removeStudent = jest.fn().mockImplementation(() => {
-          throw "Not found";
+          throw new Error("Not found");
         });
         try {
           await request(app)
@@ -192,7 +192,7 @@ describe("app tests", () => {
 
       test("test Error response", async () => {
         Hogwarts.removeStudent = jest.fn().mockImplementation(() => {
-          throw "";
+          throw new Error("");
         });
         try {
           await request(app)
@@ -233,7 +233,7 @@ describe("app tests", () => {
 
     test("test Error response", async () => {
       Hogwarts.addPoints = jest.fn().mockImplementation(() => {
-        throw "Not found";
+        throw new Error("Not found");
       });
 
       try {
@@ -279,7 +279,7 @@ describe("app tests", () => {
 
     test("test Error response", async () => {
       Hogwarts.endOfTheYear = jest.fn().mockImplementation(() => {
-        throw "";
+        throw new Error("");
       });
       try {
         await request(app)
@@ -313,7 +313,7 @@ describe("app tests", () => {
 
     test("test Error response", async () => {
       Hogwarts.getHouseNameAndId = jest.fn().mockImplementation(() => {
-        throw "";
+        throw new Error("");
       });
       try {
         await request(app)

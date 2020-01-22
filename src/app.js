@@ -18,13 +18,22 @@ app.use(function(_req, res, next) {
 
 // Add Professor :
 app.get("/addProfessor/:firstName&:lastName&:genre", async (req, res) => {
-  console.log("in ADD PROFESSOR, params: ", req.params);
+  const dateTime = new Date();
+  console.log(
+    dateTime.getHours(),
+    ":",
+    dateTime.getMinutes(),
+    ":",
+    dateTime.getSeconds(),
+    "in ADD PROFESSOR, params: ",
+    req.params
+  );
   try {
     const { firstName, lastName, genre } = req.params;
 
     if (!["M", "F"].includes(genre)) {
       //if genre isn't M or F
-      throw "bad params";
+      throw new Error("bad params");
     }
 
     const result = await Hogwarts.addProfessor(firstName, lastName, genre);
@@ -41,13 +50,22 @@ app.get("/addProfessor/:firstName&:lastName&:genre", async (req, res) => {
 
 // Remove Professor :
 app.delete("/removeProfessor/:id", async (req, res) => {
-  console.log("in REMOVE PROFESSOR, params: ", req.params);
+  const dateTime = new Date();
+  console.log(
+    dateTime.getHours(),
+    ":",
+    dateTime.getMinutes(),
+    ":",
+    dateTime.getSeconds(),
+    "in REMOVE PROFESSOR, params: ",
+    req.params
+  );
   try {
     const { id } = req.params;
     await Hogwarts.removeProfessor(id);
     res.status(204).end();
   } catch (error) {
-    switch (error) {
+    switch (error.message) {
       case "Not found":
         res.status(404).end();
         break;
@@ -64,7 +82,16 @@ app.delete("/removeProfessor/:id", async (req, res) => {
 app.get(
   "/addStudent/:firstName&:lastName&:genre&:idHouse?",
   async (req, res) => {
-    console.log("in ADD STUDENT, params: ", req.params);
+    const dateTime = new Date();
+    console.log(
+      dateTime.getHours(),
+      ":",
+      dateTime.getMinutes(),
+      ":",
+      dateTime.getSeconds(),
+      "in ADD STUDENT, params: ",
+      req.params
+    );
     try {
       const { firstName, lastName, genre, idHouse } = req.params;
 
@@ -73,7 +100,7 @@ app.get(
         !([1, 2, 3, 4].includes(parseInt(idHouse, 10)) || idHouse === undefined)
       ) {
         //if genre isn't M or F or if idHouse is defined but not 1 to 4
-        throw "bad params";
+        throw new Error("bad params");
       }
 
       //Sorting Hat:
@@ -103,13 +130,22 @@ app.get(
 
 // Remove Student :
 app.delete("/removeStudent/:id", async (req, res) => {
-  console.log("in REMOVE STUDENT, params: ", req.params);
+  const dateTime = new Date();
+  console.log(
+    dateTime.getHours(),
+    ":",
+    dateTime.getMinutes(),
+    ":",
+    dateTime.getSeconds(),
+    "in REMOVE STUDENT, params: ",
+    req.params
+  );
   try {
     const { id } = req.params;
     await Hogwarts.removeStudent(id);
     res.status(204).end();
   } catch (error) {
-    switch (error) {
+    switch (error.message) {
       case "Not found":
         res.status(404).end();
         break;
@@ -124,7 +160,16 @@ app.delete("/removeStudent/:id", async (req, res) => {
 
 // Add Points :
 app.post("/addPoints/:nb_points&:id_professor&:id_house", async (req, res) => {
-  console.log("in REMOVE STUDENT, params: ", req.params);
+  const dateTime = new Date();
+  console.log(
+    dateTime.getHours(),
+    ":",
+    dateTime.getMinutes(),
+    ":",
+    dateTime.getSeconds(),
+    "in REMOVE STUDENT, params: ",
+    req.params
+  );
   try {
     const { nb_points, id_professor, id_house } = req.params;
     const result = await Hogwarts.addPoints(nb_points, id_professor, id_house);
@@ -142,12 +187,20 @@ app.post("/addPoints/:nb_points&:id_professor&:id_house", async (req, res) => {
 
 // End of the Year :
 app.get("/endOfTheYear", async (req, res) => {
-  console.log("in END OF THE YEAR");
+  const dateTime = new Date();
+  console.log(
+    dateTime.getHours(),
+    ":",
+    dateTime.getMinutes(),
+    ":",
+    dateTime.getSeconds(),
+    "in END OF THE YEAR"
+  );
   try {
     const result = await Hogwarts.endOfTheYear();
 
     if (result.length === 0) {
-      throw "No Points";
+      throw new Error("No Points");
     }
 
     res
@@ -156,7 +209,7 @@ app.get("/endOfTheYear", async (req, res) => {
       .json(result)
       .end();
   } catch (error) {
-    switch (error) {
+    switch (error.message) {
       case "No Points":
         res.status(404).end();
         break;
@@ -171,7 +224,16 @@ app.get("/endOfTheYear", async (req, res) => {
 
 // Get House Name And Id : (for init)
 app.get("/getHouseNameAndId", async (req, res) => {
-  console.log("in GET HOUSE NAME & ID");
+  const dateTime = new Date();
+  console.log(
+    dateTime.getHours(),
+    ":",
+    dateTime.getMinutes(),
+    ":",
+    dateTime.getSeconds(),
+    "in GET HOUSE NAME & ID"
+  );
+
   try {
     const result = await Hogwarts.getHouseNameAndId();
     res

@@ -35,8 +35,6 @@ export default {
     try {
       connection = await connect();
       return await connection.getRepository(Professor).save(newProfessor);
-    } catch (err) {
-      throw err;
     } finally {
       await connection.close();
     }
@@ -55,11 +53,9 @@ export default {
         .execute();
 
       if (affected === 0 || !affected) {
-        throw "Not found";
+        throw new Error("Not found");
       }
       return;
-    } catch (err) {
-      throw err;
     } finally {
       await connection.close();
     }
@@ -70,8 +66,6 @@ export default {
     try {
       connection = await connect();
       return await connection.getRepository(Student).save(newStudent);
-    } catch (err) {
-      throw err;
     } finally {
       await connection.close();
     }
@@ -89,11 +83,9 @@ export default {
         .execute();
 
       if (affected === 0 || !affected) {
-        throw "Not found";
+        throw new Error("Not found");
       }
       return;
-    } catch (err) {
-      throw err;
     } finally {
       await connection.close();
     }
@@ -114,8 +106,6 @@ export default {
           houseID: newPoints.id_house
         })
         .getRawOne();
-    } catch (err) {
-      throw err;
     } finally {
       await connection.close();
     }
@@ -138,8 +128,6 @@ export default {
       //Clear this year points now that we got the result
       await connection.getRepository(Points).query("TRUNCATE TABLE points");
       return result;
-    } catch (err) {
-      throw err;
     } finally {
       await connection.close();
     }
@@ -155,8 +143,6 @@ export default {
         .getRepository(House)
         .createQueryBuilder("")
         .getMany();
-    } catch (err) {
-      throw err;
     } finally {
       await connection.close();
     }
