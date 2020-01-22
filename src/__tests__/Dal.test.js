@@ -42,83 +42,10 @@ describe("Data Access Layer tests", () => {
     jest.resetAllMocks();
   });
 
-  it.each([
-    //Professor
-    ["addProfessor", ["close", "getRepository", "save"]],
-    [
-      "removeProfessor",
-      ["close", "createQueryBuilder", "delete", "from", "where", "execute"]
-    ],
-
-    //Student
-    ["addStudent", ["close", "getRepository", "save"]],
-    [
-      "removeStudent",
-      ["close", "createQueryBuilder", "delete", "from", "where", "execute"]
-    ],
-
-    // Add Points
-    [
-      "addPoints",
-      [
-        "close",
-        "getRepository",
-        "save",
-        "createQueryBuilder",
-        "select",
-        "where",
-        "getRawOne"
-      ],
-      true
-    ],
-
-    [
-      "endOfTheYear",
-      [
-        "close",
-        "getRepository",
-        "createQueryBuilder",
-        "select",
-        "addSelect",
-        "groupBy",
-        "orderBy",
-        "getRawMany",
-        "query"
-      ],
-      true
-    ],
-
-    [
-      "getHouseNameAndId",
-      ["close", "getRepository", "createQueryBuilder", "getMany"]
-    ]
-  ])("Testing %s", async (testFunction, called, twoGetRepository = false) => {
-    //Init different by functions
-    switch (testFunction) {
-      case "addProfessor":
-      case "addStudent":
-        await Dal[testFunction]({ dummy: "Yes" });
-        break;
-
-      case "removeProfessor":
-      case "removeStudent":
-        typeormMocked.execute.mockResolvedValue({ affected: 1 });
-        await Dal[testFunction](42);
-        break;
-
-      case "addPoints":
-        await Dal[testFunction]({ id_house: "Yes" });
-        break;
-
-      case "endOfTheYear":
-      case "getHouseNameAndId":
-        await Dal[testFunction]();
-        break;
-    }
-
+  const testingCalledFun = (called, twoGetRepository = false) => {
     expect(createConnection).toHaveBeenCalledTimes(1);
 
-    //Testing number of call of all functions
+    //Testing that only called function where called
     for (let key in typeormMocked) {
       if (called.includes(key)) {
         if (twoGetRepository && key === "getRepository") {
@@ -130,55 +57,109 @@ describe("Data Access Layer tests", () => {
         expect(typeormMocked[key]).toHaveBeenCalledTimes(0);
       }
     }
+  };
+
+  //test Add :
+  it.each([
+    //Professor
+    ["addProfessor", ["close", "getRepository", "save"]],
+    //Student
+    ["addStudent", ["close", "getRepository", "save"]]
+  ])("Testing %s", async (testFunction, called) => {
+    //Init different by functions
+    await Dal[testFunction]({ dummy: "Yes" });
+
+    testingCalledFun(called);
 
     //Testing called input
-    switch (testFunction) {
-      case "addProfessor":
-      case "addStudent":
-        expect(typeormMocked.save).toHaveBeenCalledWith({ dummy: "Yes" });
-        break;
+    expect(typeormMocked.save).toHaveBeenCalledWith({ dummy: "Yes" });
+  });
 
-      case "removeProfessor":
-      case "removeStudent":
-        expect(typeormMocked.where).toHaveBeenCalledWith("id = :id", {
-          id: 42
-        });
-        break;
+  //test Remove :
+  it.each([
+    //Professor
+    [
+      "removeProfessor",
+      ["close", "createQueryBuilder", "delete", "from", "where", "execute"]
+    ],
+    //Student
+    [
+      "removeStudent",
+      ["close", "createQueryBuilder", "delete", "from", "where", "execute"]
+    ]
+  ])("Testing %s", async (testFunction, called) => {
+    //Init different by functions
+    typeormMocked.execute.mockResolvedValue({ affected: 1 });
+    await Dal[testFunction](42);
 
-      case "addPoints":
-        expect(typeormMocked.save).toHaveBeenCalledWith({ id_house: "Yes" });
-        expect(typeormMocked.select).toHaveBeenCalledWith(
-          "SUM(`nb_points`)",
-          "total"
-        );
-        expect(typeormMocked.where).toHaveBeenCalledWith(
-          "entryPoints.id_house = :houseID",
-          {
-            houseID: "Yes"
-          }
-        );
-        break;
+    testingCalledFun(called);
 
-      case "endOfTheYear":
-        expect(typeormMocked.select).toHaveBeenCalledWith("id_house", "house");
-        expect(typeormMocked.addSelect).toHaveBeenCalledWith(
-          "SUM(`nb_points`)",
-          "total"
-        );
-        expect(typeormMocked.groupBy).toHaveBeenCalledWith("id_house");
-        expect(typeormMocked.orderBy).toHaveBeenCalledWith("total", "DESC");
-        expect(typeormMocked.query).toHaveBeenCalledWith(
-          "TRUNCATE TABLE points"
-        );
-        break;
+    //Testing called input
+    expect(typeormMocked.where).toHaveBeenCalledWith("id = :id", {
+      id: 42
+    });
+  });
 
-      case "getHouseNameAndId":
-        //no special call to test
-        break;
+  it("Testing addPoints", async () => {
+    const called = [
+      "close",
+      "getRepository",
+      "save",
+      "createQueryBuilder",
+      "select",
+      "where",
+      "getRawOne"
+    ];
 
-      default:
-        //force Error
-        expect(true).toBeFalsy();
-    }
+    await Dal.addPoints({ id_house: "Yes" });
+
+    testingCalledFun(called, true);
+
+    expect(typeormMocked.save).toHaveBeenCalledWith({ id_house: "Yes" });
+    expect(typeormMocked.select).toHaveBeenCalledWith(
+      "SUM(`nb_points`)",
+      "total"
+    );
+    expect(typeormMocked.where).toHaveBeenCalledWith(
+      "entryPoints.id_house = :houseID",
+      {
+        houseID: "Yes"
+      }
+    );
+  });
+
+  it("Testing endOfTheYear", async () => {
+    const called = [
+      "close",
+      "getRepository",
+      "createQueryBuilder",
+      "select",
+      "addSelect",
+      "groupBy",
+      "orderBy",
+      "getRawMany",
+      "query"
+    ];
+
+    await Dal.endOfTheYear();
+
+    testingCalledFun(called, true);
+
+    expect(typeormMocked.select).toHaveBeenCalledWith("id_house", "house");
+    expect(typeormMocked.addSelect).toHaveBeenCalledWith(
+      "SUM(`nb_points`)",
+      "total"
+    );
+    expect(typeormMocked.groupBy).toHaveBeenCalledWith("id_house");
+    expect(typeormMocked.orderBy).toHaveBeenCalledWith("total", "DESC");
+    expect(typeormMocked.query).toHaveBeenCalledWith("TRUNCATE TABLE points");
+  });
+
+  it("Testing getHouseNameAndId", async () => {
+    const called = ["close", "getRepository", "createQueryBuilder", "getMany"];
+
+    await Dal.getHouseNameAndId();
+
+    testingCalledFun(called);
   });
 });
