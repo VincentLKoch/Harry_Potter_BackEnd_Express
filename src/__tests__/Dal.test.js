@@ -163,3 +163,5 @@ describe("Data Access Layer tests", () => {
     testingCalledFun(called);
   });
 });
+
+//TODO test get Student / prof / points

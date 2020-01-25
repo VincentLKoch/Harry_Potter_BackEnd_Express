@@ -61,6 +61,19 @@ export default {
     }
   },
 
+  getAllProfessor: async () => {
+    let connection;
+    try {
+      connection = await connect();
+      return await connection
+        .getRepository(Professor)
+        .createQueryBuilder("")
+        .getRawMany();
+    } finally {
+      await connection.close();
+    }
+  },
+
   addStudent: async newStudent => {
     let connection;
     try {
@@ -91,6 +104,19 @@ export default {
     }
   },
 
+  getAllStudent: async () => {
+    let connection;
+    try {
+      connection = await connect();
+      return await connection
+        .getRepository(Student)
+        .createQueryBuilder("")
+        .getRawMany();
+    } finally {
+      await connection.close();
+    }
+  },
+
   addPoints: async newPoints => {
     let connection;
     try {
@@ -104,6 +130,24 @@ export default {
         .select("SUM(`nb_points`)", "total")
         .where("entryPoints.id_house = :houseID", {
           houseID: newPoints.id_house
+        })
+        .getRawOne();
+    } finally {
+      await connection.close();
+    }
+  },
+
+  getPoints: async id => {
+    console.log("in getPoints, id\n", id);
+    let connection;
+    try {
+      connection = await connect();
+      return await connection
+        .getRepository(Points)
+        .createQueryBuilder("entryPoints")
+        .select("SUM(`nb_points`)", "total")
+        .where("entryPoints.id_house = :houseID", {
+          houseID: id
         })
         .getRawOne();
     } finally {

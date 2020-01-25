@@ -292,14 +292,14 @@ describe("app tests", () => {
     });
   });
 
-  describe("getHouseNameAndId tests", () => {
+  describe("getInitData tests", () => {
     test("Should Work", async () => {
-      Hogwarts.getHouseNameAndId = jest
+      Hogwarts.getInitData = jest
         .fn()
         .mockReturnValue({ testresult: "Working" });
       try {
         await request(app)
-          .get("/getHouseNameAndId")
+          .get("/getInitData")
           .expect(200)
           .expect("Content-Type", /json/)
           .expect(response => {
@@ -308,21 +308,21 @@ describe("app tests", () => {
       } catch (err) {
         expect(err).toBeNull();
       }
-      expect(Hogwarts.getHouseNameAndId).toHaveBeenCalledTimes(1);
+      expect(Hogwarts.getInitData).toHaveBeenCalledTimes(1);
     });
 
     test("test Error response", async () => {
-      Hogwarts.getHouseNameAndId = jest.fn().mockImplementation(() => {
+      Hogwarts.getInitData = jest.fn().mockImplementation(() => {
         throw new Error("");
       });
       try {
         await request(app)
-          .get("/getHouseNameAndId")
+          .get("/getInitData")
           .expect(400);
       } catch (err) {
         expect(err).toBeNull();
       }
-      expect(Hogwarts.getHouseNameAndId).toHaveBeenCalledTimes(1);
+      expect(Hogwarts.getInitData).toHaveBeenCalledTimes(1);
     });
   });
 });

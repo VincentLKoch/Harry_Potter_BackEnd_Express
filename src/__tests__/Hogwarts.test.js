@@ -177,26 +177,47 @@ describe("Hogwarts Tests", () => {
     });
   });
 
-  describe("getHouseNameAndId tests", () => {
-    test("getHouseNameAndId", async () => {
-      Dal.getHouseNameAndId = jest
+  describe("getInitData tests", () => {
+    test("getInitData", async () => {
+      Dal.getHouseNameAndId = jest.fn().mockReturnValue([{ id: 1 }]);
+      Dal.getPoints = jest.fn().mockReturnValue({ total: "Ah!" });
+      Dal.getAllStudent = jest
         .fn()
-        .mockReturnValue({ return: "Incroyable" });
-      const result = await Hogwarts.getHouseNameAndId();
-      expect(result).toEqual({ return: "Incroyable" });
+        .mockReturnValue({ studentQuote: "Encore du travail ?!" });
+      Dal.getAllProfessor = jest
+        .fn()
+        .mockReturnValue({ Attacking: "Zug zug!" });
+
+      const result = await Hogwarts.getInitData();
+      expect(result).toEqual({
+        house: [{ id: 1, point: "Ah!" }],
+        student: { studentQuote: "Encore du travail ?!" },
+        professor: { Attacking: "Zug zug!" }
+      });
+
       expect(Dal.getHouseNameAndId).toHaveBeenCalledTimes(1);
+      expect(Dal.getPoints).toHaveBeenCalledTimes(1);
+      expect(Dal.getAllStudent).toHaveBeenCalledTimes(1);
+      expect(Dal.getAllProfessor).toHaveBeenCalledTimes(1);
     });
 
-    test("getHouseNameAndId Throw", async () => {
+    test("getInitData Throw", async () => {
       Dal.getHouseNameAndId = jest.fn().mockImplementation(() => {
         throw new Error("Toto");
       });
+      Dal.getPoints = jest.fn();
+      Dal.getAllStudent = jest.fn();
+      Dal.getAllProfessor = jest.fn();
+
       try {
-        await Hogwarts.getHouseNameAndId();
+        await Hogwarts.getInitData();
       } catch (error) {
         expect(error).toStrictEqual(new Error("Toto"));
       }
       expect(Dal.getHouseNameAndId).toHaveBeenCalledTimes(1);
+      expect(Dal.getPoints).toHaveBeenCalledTimes(0);
+      expect(Dal.getAllStudent).toHaveBeenCalledTimes(0);
+      expect(Dal.getAllProfessor).toHaveBeenCalledTimes(0);
     });
   });
 });

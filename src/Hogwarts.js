@@ -35,7 +35,18 @@ export default {
     return await Dal.endOfTheYear();
   },
 
-  getHouseNameAndId: async () => {
-    return await Dal.getHouseNameAndId();
+  getInitData: async () => {
+    const houseData = await Dal.getHouseNameAndId();
+    for (let index = 0; index < houseData.length; index++) {
+      // should be 4 iterations if Slytherin isn't ban yet
+      const element = houseData[index];
+      const point = await Dal.getPoints(element.id);
+      houseData[index] = { ...element, point: point.total };
+    }
+
+    const student = await Dal.getAllStudent();
+    const professor = await Dal.getAllProfessor();
+
+    return { house: houseData, student, professor };
   }
 };

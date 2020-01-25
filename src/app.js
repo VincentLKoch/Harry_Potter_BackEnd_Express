@@ -222,8 +222,8 @@ app.get("/endOfTheYear", async (req, res) => {
   }
 });
 
-// Get House Name And Id : (for init)
-app.get("/getHouseNameAndId", async (req, res) => {
+// get Init Data :
+app.get("/getInitData", async (req, res) => {
   const dateTime = new Date();
   console.log(
     dateTime.getHours(),
@@ -235,7 +235,7 @@ app.get("/getHouseNameAndId", async (req, res) => {
   );
 
   try {
-    const result = await Hogwarts.getHouseNameAndId();
+    const result = await Hogwarts.getInitData();
     res
       .status(200)
       .set({ "Content-Type": "application/json" })
