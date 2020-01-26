@@ -68,7 +68,7 @@ export default {
       return await connection
         .getRepository(Professor)
         .createQueryBuilder("")
-        .getRawMany();
+        .getMany();
     } finally {
       await connection.close();
     }
@@ -111,7 +111,7 @@ export default {
       return await connection
         .getRepository(Student)
         .createQueryBuilder("")
-        .getRawMany();
+        .getMany();
     } finally {
       await connection.close();
     }
