@@ -167,7 +167,7 @@ app.post("/addPoints/:nb_points&:id_professor&:id_house", async (req, res) => {
     dateTime.getMinutes(),
     ":",
     dateTime.getSeconds(),
-    "in REMOVE STUDENT, params: ",
+    "in ADD POINTS, params: ",
     req.params
   );
   try {
