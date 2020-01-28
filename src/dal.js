@@ -138,7 +138,7 @@ export default {
   },
 
   getPoints: async id => {
-    console.log("in getPoints, id\n", id);
+    console.log("in getPoints, id: ", id);
     let connection;
     try {
       connection = await connect();
